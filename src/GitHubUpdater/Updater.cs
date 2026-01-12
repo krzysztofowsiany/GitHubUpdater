@@ -31,6 +31,7 @@ public class Updater
             return;
         }
 
+
         var tempPath = await DownloadNewVersionToTemp(latest);
 
         var agentPath = Path.Combine(AppContext.BaseDirectory, "UpdaterAgent.exe");
@@ -59,7 +60,7 @@ public class Updater
     {
         var zipUrl = await GetNewVersionUrl(latest);
 
-        var updateDir = Path.Combine(Path.GetTempPath(), "GitHubUpdater", Guid.NewGuid().ToString());
+        var updateDir = Path.Combine(Path.GetTempPath(), "GitHubUpdater");
         Directory.CreateDirectory(updateDir);
         var tempPath = Path.Combine(updateDir, $"update-{latest}.zip");
         Console.WriteLine($"Download path: {tempPath}");

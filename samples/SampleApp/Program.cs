@@ -12,7 +12,7 @@ class Program
             o.Repository = "krzysztofowsiany/GitHubUpdater";
             o.CurrentVersion = "0.0.1";
             o.GitHubToken = config.GitHubToken;
-            o.AssetName = "app-win-x64.zip.zip";
+            o.AssetName = "app-win-x64.zip";
         }, new HttpClient()).CheckAndUpdateAsync();
 
         Console.WriteLine("App started...");

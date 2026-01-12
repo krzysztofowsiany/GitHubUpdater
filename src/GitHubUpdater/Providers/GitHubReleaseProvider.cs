@@ -52,6 +52,6 @@ public class GitHubReleaseProvider
         var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadAsStringAsync();
+        return await response.Content.ReadAsStringAsync();
     }
 }
