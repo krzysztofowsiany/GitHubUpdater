@@ -21,27 +21,29 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Get version from tag
+        id: get_version
+        run: |
+          $version = "${{ github.ref_name }}" -replace '^githubupdater-v', ''
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
       - name: Restore dependencies
         run: dotnet restore src/GitHubUpdater/GitHubUpdater.csproj
 
       - name: Build
         run: dotnet build src/GitHubUpdater/GitHubUpdater.csproj -c Release --no-restore
 
-      - name: Publish
-        run: dotnet publish src/GitHubUpdater/GitHubUpdater.csproj -c Release -o ./publish/GitHubUpdater --no-build
+      - name: Pack NuGet
+        run: dotnet pack src/GitHubUpdater/GitHubUpdater.csproj -c Release --no-build -o ./nupkg -p:PackageVersion=${{ steps.get_version.outputs.VERSION }}
 
-      - name: Create ZIP
-        run: Compress-Archive -Path ./publish/GitHubUpdater/* -DestinationPath ./GitHubUpdater.zip
-
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/githubupdater-}" >> $env:GITHUB_OUTPUT
+      - name: Push to NuGet
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           name: GitHubUpdater ${{ steps.get_version.outputs.VERSION }}
-          files: ./GitHubUpdater.zip
+          files: ./nupkg/*.nupkg
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

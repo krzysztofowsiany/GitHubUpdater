@@ -4,6 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet Package -->
+    <PackageId>GitHubUpdater</PackageId>
+    <Authors>krzysztofowsiany</Authors>
+    <Description>Auto-update library for Windows applications using GitHub Releases</Description>
+    <PackageProjectUrl>https://github.com/krzysztofowsiany/GitHubUpdater</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/krzysztofowsiany/GitHubUpdater</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>updater;github;auto-update;windows</PackageTags>
   </PropertyGroup>
 
 </Project>
