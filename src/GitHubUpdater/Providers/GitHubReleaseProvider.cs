@@ -15,40 +15,16 @@ public class GitHubReleaseProvider
         _token = token;
     }
 
-    public async Task<string> GetLatestReleaseAsync()
+    public async Task<string> GetLatestReleaseVersionAsync()
     {
-        var url = $"https://api.github.com/repos/{_repo}/releases/latest";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-
-        request.Headers.Add("User-Agent", "GitHubUpdater");
-        request.Headers.Add("Accept", "application/vnd.github+json");
-        request.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
-        if (!string.IsNullOrEmpty(_token))
-            request.Headers.Add("Authorization", $"Bearer {_token}");
-
-        var response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-
-        var json = await response.Content.ReadAsStringAsync();
+        var json = await GetLatestReleaseAsync();
         using var doc = JsonDocument.Parse(json);
         return doc.RootElement.GetProperty("tag_name").GetString() ?? "0.0.0";
     }
 
     public async Task<string> GetAssetUrlAsync(string assetName)
     {
-        var url = $"https://api.github.com/repos/{_repo}/releases/latest";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-
-        request.Headers.Add("User-Agent", "GitHubUpdater");
-        request.Headers.Add("Accept", "application/vnd.github+json");
-        request.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
-        if (!string.IsNullOrEmpty(_token))
-            request.Headers.Add("Authorization", $"Bearer {_token}");
-
-        var response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-
-        var json = await response.Content.ReadAsStringAsync();
+        var json = await GetLatestReleaseAsync();
         using var doc = JsonDocument.Parse(json);
         var assets = doc.RootElement.GetProperty("assets").EnumerateArray();
 
@@ -59,5 +35,23 @@ public class GitHubReleaseProvider
         }
 
         throw new Exception($"Asset {assetName} not found in latest release");
+    }
+
+
+    private async Task<string> GetLatestReleaseAsync()
+    {
+        var url = $"https://api.github.com/repos/{_repo}/releases/latest";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+        request.Headers.Add("User-Agent", "GitHubUpdater");
+        request.Headers.Add("Accept", "application/vnd.github+json");
+        request.Headers.Add("X-GitHub-Api-Version", "2022-11-28");
+        if (!string.IsNullOrEmpty(_token))
+            request.Headers.Add("Authorization", $"Bearer {_token}");
+
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync();
     }
 }

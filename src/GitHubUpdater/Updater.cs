@@ -1,8 +1,5 @@
 using GitHubUpdater.Providers;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace GitHubUpdater;
 
@@ -26,7 +23,7 @@ public class Updater
 
     public async Task CheckAndUpdateAsync()
     {
-        var latest = await _provider.GetLatestReleaseAsync();
+        var latest = await _provider.GetLatestReleaseVersionAsync();
 
         if (latest == Options.CurrentVersion)
         {
@@ -34,21 +31,7 @@ public class Updater
             return;
         }
 
-        Console.WriteLine($"New version available: {latest}");
-        var zipUrl = await _provider.GetAssetUrlAsync(Options.AssetName);
-        Console.WriteLine($"ZipUrl: {zipUrl}");
-
-        var updateDir = Path.Combine(Path.GetTempPath(), "GitHubUpdater", Guid.NewGuid().ToString());
-        Directory.CreateDirectory(updateDir);
-        var tempPath = Path.Combine(updateDir, $"update-{latest}.zip");
-        Console.WriteLine($"Download path: {tempPath}");
-
-        using (var response = await _httpClient.GetAsync(zipUrl))
-        {
-            response.EnsureSuccessStatusCode();
-            using var fs = File.Create(tempPath);
-            await response.Content.CopyToAsync(fs);
-        }
+        var tempPath = await DownloadNewVersionToTemp(latest);
 
         var agentPath = Path.Combine(AppContext.BaseDirectory, "UpdaterAgent.exe");
         Console.WriteLine($"Start updater: {agentPath}");
@@ -63,12 +46,31 @@ public class Updater
         Console.WriteLine("Updater agent started. Exiting app...");
         Environment.Exit(0);
     }
-}
 
-public class UpdaterOptions
-{
-    public string Repository { get; set; } = string.Empty;
-    public string CurrentVersion { get; set; } = "0.0.0";
-    public string? GitHubToken { get; set; }
-    public string AssetName { get; set; } = string.Empty;
+    private async Task<string> GetNewVersionUrl(string latest)
+    {
+        Console.WriteLine($"New version available: {latest}");
+        var zipUrl = await _provider.GetAssetUrlAsync(Options.AssetName);
+        Console.WriteLine($"ZipUrl: {zipUrl}");
+        return zipUrl;
+    }
+
+    private async Task<string> DownloadNewVersionToTemp(string latest)
+    {
+        var zipUrl = await GetNewVersionUrl(latest);
+
+        var updateDir = Path.Combine(Path.GetTempPath(), "GitHubUpdater", Guid.NewGuid().ToString());
+        Directory.CreateDirectory(updateDir);
+        var tempPath = Path.Combine(updateDir, $"update-{latest}.zip");
+        Console.WriteLine($"Download path: {tempPath}");
+
+        using (var response = await _httpClient.GetAsync(zipUrl))
+        {
+            response.EnsureSuccessStatusCode();
+            using var fs = File.Create(tempPath);
+            await response.Content.CopyToAsync(fs);
+        }
+
+        return tempPath;
+    }
 }
