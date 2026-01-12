@@ -11,15 +11,16 @@ public class Updater
     public UpdaterOptions Options { get; private set; } = new();
 
     private GitHubReleaseProvider _provider = null!;
-    private static readonly HttpClient _httpClient = new();
+    private HttpClient _httpClient = null!;
 
-    public static Updater Configure(Action<UpdaterOptions> configure)
+    public static Updater Configure(Action<UpdaterOptions> configure, HttpClient? httpClient = null)
     {
         var updater = new Updater();
         var options = new UpdaterOptions();
         configure(options);
         updater.Options = options;
-        updater._provider = new GitHubReleaseProvider(options.Repository);
+        updater._httpClient = httpClient ?? new HttpClient();
+        updater._provider = new GitHubReleaseProvider(updater._httpClient, options.Repository, options.GitHubToken);
         return updater;
     }
 
@@ -34,9 +35,14 @@ public class Updater
         }
 
         Console.WriteLine($"New version available: {latest}");
-        var zipUrl = await _provider.GetAssetUrlAsync("app-win-x64.zip");
+        var zipUrl = await _provider.GetAssetUrlAsync(Options.AssetName);
+        Console.WriteLine($"ZipUrl: {zipUrl}");
 
-        var tempPath = Path.Combine(Path.GetTempPath(), "update.zip");
+        var updateDir = Path.Combine(Path.GetTempPath(), "GitHubUpdater", Guid.NewGuid().ToString());
+        Directory.CreateDirectory(updateDir);
+        var tempPath = Path.Combine(updateDir, $"update-{latest}.zip");
+        Console.WriteLine($"Download path: {tempPath}");
+
         using (var response = await _httpClient.GetAsync(zipUrl))
         {
             response.EnsureSuccessStatusCode();
@@ -44,8 +50,9 @@ public class Updater
             await response.Content.CopyToAsync(fs);
         }
 
-        // Uruchom updater agent
         var agentPath = Path.Combine(AppContext.BaseDirectory, "UpdaterAgent.exe");
+        Console.WriteLine($"Start updater: {agentPath}");
+
         var startInfo = new ProcessStartInfo(agentPath)
         {
             Arguments = $"\"{tempPath}\" \"{AppContext.BaseDirectory}\"",
@@ -62,4 +69,6 @@ public class UpdaterOptions
 {
     public string Repository { get; set; } = string.Empty;
     public string CurrentVersion { get; set; } = "0.0.0";
+    public string? GitHubToken { get; set; }
+    public string AssetName { get; set; } = string.Empty;
 }

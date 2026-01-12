@@ -17,8 +17,38 @@ internal class Program
 
         Console.WriteLine($"Updating from {zipPath} to {targetDir}...");
 
-        // unzip and overwrite
-        ZipFile.ExtractToDirectory(zipPath, targetDir, true);
+        using (var archive = ZipFile.OpenRead(zipPath))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                var destinationPath = Path.Combine(targetDir, entry.FullName);
+
+                if (string.IsNullOrEmpty(entry.Name))
+                {
+                    Directory.CreateDirectory(destinationPath);
+                    continue;
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+
+                try
+                {
+                    entry.ExtractToFile(destinationPath, overwrite: true);
+                    Console.WriteLine($"Extracted: {entry.FullName}");
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine($"Skipped (in use): {entry.FullName} - {ex.Message}");
+                }
+            }
+        }
+
+        var updateDir = Path.GetDirectoryName(zipPath);
+        if (updateDir != null && Directory.Exists(updateDir))
+        {
+            Directory.Delete(updateDir, recursive: true);
+            Console.WriteLine($"Cleaned up: {updateDir}");
+        }
 
         Console.WriteLine("Update applied successfully.");
     }
