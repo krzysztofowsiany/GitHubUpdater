@@ -1,4 +1,3 @@
-using GitHubUpdater;
 using System.Text.Json;
 
 class Program

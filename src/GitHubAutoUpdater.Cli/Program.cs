@@ -1,4 +1,5 @@
-﻿using Spectre.Console.Cli;
+﻿using GitHubAutoUpdater.Cli.Commands;
+using Spectre.Console.Cli;
 
 var app = new CommandApp();
 

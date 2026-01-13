@@ -9,6 +9,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubAutoUpdater", "src\Gi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdaterAgent", "src\UpdaterAgent\UpdaterAgent.csproj", "{7DD13A4C-B9AA-4DE4-89CA-4CBC4FE79D3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubAutoUpdater.Cli", "src\GitHubAutoUpdater.Cli\GitHubAutoUpdater.Cli.csproj", "{081755E4-ABAB-43D6-87CE-0005AA78CCDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "samples\SampleApp\SampleApp.csproj", "{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\githubupdater-release.yml = .github\workflows\githubupdater-release.yml
+		.github\workflows\sampleapp-release.yml = .github\workflows\sampleapp-release.yml
+		.github\workflows\updateragent-release.yml = .github\workflows\updateragent-release.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +56,30 @@ Global
 		{7DD13A4C-B9AA-4DE4-89CA-4CBC4FE79D3C}.Release|x64.Build.0 = Release|Any CPU
 		{7DD13A4C-B9AA-4DE4-89CA-4CBC4FE79D3C}.Release|x86.ActiveCfg = Release|Any CPU
 		{7DD13A4C-B9AA-4DE4-89CA-4CBC4FE79D3C}.Release|x86.Build.0 = Release|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Debug|x64.Build.0 = Debug|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Debug|x86.Build.0 = Debug|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Release|x64.ActiveCfg = Release|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Release|x64.Build.0 = Release|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Release|x86.ActiveCfg = Release|Any CPU
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD}.Release|x86.Build.0 = Release|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Release|x64.Build.0 = Release|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +87,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1D6AEB1A-F6CF-A303-FC04-CC59691270FC} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{7DD13A4C-B9AA-4DE4-89CA-4CBC4FE79D3C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{081755E4-ABAB-43D6-87CE-0005AA78CCDD} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{6D7DB715-DFD2-B5C0-C9FE-1AE5EAA95614} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9EBAD0EC-9ABD-465D-A6E7-E653874AC66A}
